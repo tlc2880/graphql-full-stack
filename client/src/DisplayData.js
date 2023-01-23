@@ -26,6 +26,7 @@ const GET_MOVIE_BY_NAME = gql`
     movie(name: $name) {
       name
       yearOfPublication
+      isInTheaters
     }
   }
 `;
@@ -121,7 +122,7 @@ function DisplayData() {
       {movieData &&
         movieData.movies.map((movie) => {
           return <h1>Movie Name: {movie.name}</h1>;
-        })}
+      })}
 
       <div>
         <input
@@ -148,6 +149,9 @@ function DisplayData() {
               <h1>MovieName: {movieSearchedData.movie.name}</h1>
               <h1>
                 Year Of Publication: {movieSearchedData.movie.yearOfPublication}
+              </h1>
+              <h1>
+                Is in Theaters: {JSON.stringify(movieSearchedData.movie.isInTheaters)}
               </h1>{" "}
             </div>
           )}
