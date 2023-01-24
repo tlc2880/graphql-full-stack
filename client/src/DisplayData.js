@@ -32,6 +32,17 @@ const GET_MOVIE_BY_NAME = gql`
   }
 `;
 
+const GET_USER_BY_NAME = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      name
+      username
+      age
+      nationality
+    }
+  }
+`;
+
 const CREATE_USER_MUTATION = gql`
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -43,6 +54,7 @@ const CREATE_USER_MUTATION = gql`
 
 function DisplayData() {
   const [movieSearched, setMovieSearched] = useState("");
+  const [userSearched, setUserSearched] = useState("");
 
   // Create User States
   const [name, setName] = useState("");
@@ -56,6 +68,10 @@ function DisplayData() {
     fetchMovie,
     { data: movieSearchedData, error: movieError },
   ] = useLazyQuery(GET_MOVIE_BY_NAME);
+  const [
+    fetchUser,
+    { data: userSearchedData, error: userError },
+  ] = useLazyQuery(GET_USER_BY_NAME);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION);
 
@@ -119,6 +135,44 @@ function DisplayData() {
             </div>
           );
         })}
+
+      <div>
+        <input
+          type="text"
+          placeholder="2..."
+          onChange={(event) => {
+            setUserSearched(event.target.value);
+          }}
+        />
+         <button
+          onClick={() => {
+            fetchUser({
+              variables: {
+                id: userSearched,
+              },
+            });
+          }}
+        > 
+          Fetch User
+        </button>
+        <div>
+          {userSearchedData && (
+            <div>
+              <h1>Name: {userSearchedData.user.name}</h1>
+              <h1>
+                username: {userSearchedData.user.username}
+              </h1>
+              <h1>
+                Age: {userSearchedData.user.age}
+              </h1>
+              <h1>
+                Nationality: {userSearchedData.user.nationality}
+              </h1>{" "}
+            </div>
+          )}
+          {userError && <h1> There was an error fetching the data</h1>}
+        </div>
+      </div>
 
       {movieData &&
         movieData.movies.map((movie) => {
