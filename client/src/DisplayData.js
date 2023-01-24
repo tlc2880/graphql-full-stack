@@ -26,6 +26,7 @@ const GET_MOVIE_BY_NAME = gql`
     movie(name: $name) {
       name
       yearOfPublication
+      rating
       isInTheaters
     }
   }
@@ -123,7 +124,6 @@ function DisplayData() {
         movieData.movies.map((movie) => {
           return <h1>Movie Name: {movie.name}</h1>;
       })}
-
       <div>
         <input
           type="text"
@@ -132,7 +132,7 @@ function DisplayData() {
             setMovieSearched(event.target.value);
           }}
         />
-        <button
+         <button
           onClick={() => {
             fetchMovie({
               variables: {
@@ -140,7 +140,7 @@ function DisplayData() {
               },
             });
           }}
-        >
+        > 
           Fetch Data
         </button>
         <div>
@@ -149,6 +149,9 @@ function DisplayData() {
               <h1>MovieName: {movieSearchedData.movie.name}</h1>
               <h1>
                 Year Of Publication: {movieSearchedData.movie.yearOfPublication}
+              </h1>
+              <h1>
+                Rating: {movieSearchedData.movie.rating}
               </h1>
               <h1>
                 Is in Theaters: {JSON.stringify(movieSearchedData.movie.isInTheaters)}

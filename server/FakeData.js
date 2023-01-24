@@ -66,24 +66,28 @@ const UserList = [
       id: 1,
       name: "Avengers Endgame",
       yearOfPublication: 2019,
+      rating: "PG",
       isInTheaters: true,
     },
     {
       id: 2,
       name: "Interstellar",
       yearOfPublication: 2007,
+      rating: "PG-13",
       isInTheaters: true,
     },
     {
       id: 3,
       name: "Top Gun: Maverick",
       yearOfPublication: 2022,
+      rating: "Restricted",
       isInTheaters: true,
     },
     {
       id: 4,
       name: "JamesTech The Movie",
       yearOfPublication: 2035,
+      rating: "General",
       isInTheaters: false,
     },
   ];
