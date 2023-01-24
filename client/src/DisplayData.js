@@ -27,6 +27,7 @@ const GET_MOVIE_BY_NAME = gql`
       name
       yearOfPublication
       rating
+      isInTheaters
     }
   }
 `;
@@ -151,6 +152,9 @@ function DisplayData() {
               </h1>
               <h1>
                 Rating: {movieSearchedData.movie.rating}
+              </h1>
+              <h1>
+                Is in Theaters: {JSON.stringify(movieSearchedData.movie.isInTheaters)}
               </h1>{" "}
             </div>
           )}
