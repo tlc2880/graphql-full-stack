@@ -22,6 +22,7 @@ const typeDefs = gql`
   type Query {
     users: [User!]!
     user(id: ID!): User!
+    findUserName(name: String!): User!
     movies: [Movie!]!
     movie(name: String!): Movie!
   }
