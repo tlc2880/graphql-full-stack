@@ -7,6 +7,11 @@ const resolvers = {
     users: () => {
       return UserList;
     },
+    findUserName: (parent, args) => {
+      const name = args.name;
+      const user = _.find(UserList, { name });
+      return user;
+    },
     user: (parent, args) => {
       const id = args.id;
       const user = _.find(UserList, { id: Number(id) });
