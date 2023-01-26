@@ -16,19 +16,7 @@ const QUERY_ALL_USERS = gql`
 const QUERY_ALL_MOVIES = gql`
   query GetAllMovies {
     movies {
-      id
       name
-    }
-  }
-`;
-
-const GET_USER_BY_NAME = gql`
-  query User($name: String!) {
-    findUserName(name: $name) {
-      name
-      username
-      age
-      nationality
     }
   }
 `;
@@ -44,6 +32,16 @@ const GET_USER_BY_ID = gql`
   }
 `;
 
+const GET_USER_BY_NAME = gql`
+  query User($name: String!) {
+    findUserName(name: $name) {
+      name
+      username
+      age
+      nationality
+    }
+  }
+`;
 const GET_MOVIE_BY_NAME = gql`
   query Movie($name: String!) {
     findMovieName(name: $name) {
@@ -65,6 +63,7 @@ const GET_MOVIE_BY_ID = gql`
     }
   }
 `;
+
 const CREATE_USER_MUTATION = gql`
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -105,18 +104,11 @@ function DisplayData() {
     fetchMovieId,
     { data: movieSearchedIdData, error: movieErrorId },
   ] = useLazyQuery(GET_MOVIE_BY_ID);
-    fetchMovie,
-    { data: movieSearchedNameData, error: movieErrorName },
-  ] = useLazyQuery(GET_MOVIE_BY_NAME);
-  const [
-    fetchUserId,
-    { data: userSearchedIdData, error: userErrorId },
-  ] = useLazyQuery(GET_USER_BY_ID);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION);
 
   if (loading) {
-    return <h1> DATA IS LOADING...</h1>;
+    return <h3> DATA IS LOADING...</h3>;
   }
 
   return (
@@ -167,7 +159,7 @@ function DisplayData() {
       {data &&
         data.users.map((user) => {
           return (
-            <div key={user.id}>
+            <div>
               <h3>Name: {user.name}</h3>
               <h3>Username: {user.username}</h3>
               <h3>Age: {user.age}</h3>
@@ -176,7 +168,7 @@ function DisplayData() {
           );
         })}
 
-<div>
+      <div>
         <input
           type="text"
           placeholder="James..."
@@ -235,6 +227,7 @@ function DisplayData() {
           Fetch User Id
         </button>
         <div>
+          {console.log(userSearchedIdData)}
           {userSearchedIdData && (
             <div>
               <h3>Name: {userSearchedIdData.findUserId.name}</h3>
@@ -253,11 +246,10 @@ function DisplayData() {
         </div>
       </div>
 
-      {console.log(movieData)}
       {movieData &&
-        movieData.movies.map((movie) =>
-          <h3 key={movie.id}>Movie Name: {movie.name}</h3>
-      )}
+        movieData.movies.map((movie) => {
+          return <h3>Movie Name: {movie.name}</h3>;
+      })}
 
       <div>
         <input
@@ -279,9 +271,10 @@ function DisplayData() {
           Fetch Movie Name
         </button>
         <div>
+        {console.log(movieSearchedNameData)}
           {movieSearchedNameData && (
             <div>
-              <h3>MovieName: {movieSearchedNameData.findMovieName.name}</h3>
+              <h3>Movie Name: {movieSearchedNameData.findMovieName.name}</h3>
               <h3>
                 Year Of Publication: {movieSearchedNameData.findMovieName.yearOfPublication}
               </h3>
@@ -332,21 +325,7 @@ function DisplayData() {
               </h3>{" "}
             </div>
           )}
-          {movieErrorId && <h1> There was an error fetching the data</h1>}
-            <div>
-              <h3>MovieName: {movieSearchedNameData.findMovieName.name}</h3>
-              <h3>
-                Year Of Publication: {movieSearchedNameData.findMovieName.yearOfPublication}
-              </h3>
-              <h3>
-                Rating: {movieSearchedNameData.findMovieName.rating}
-              </h3>
-              <h3>
-                Is in Theaters: {JSON.stringify(movieSearchedNameData.findMovieName.isInTheaters)}
-              </h3>{" "}
-            </div>
-          )}
-          {movieErrorName && <h3> There was an error fetching the data</h3>}
+          {movieErrorId && <h3> There was an error fetching the data</h3>}
         </div>
       </div>
     </div>
