@@ -27,6 +27,11 @@ const resolvers = {
       const movie = _.find(MovieList, { name });
       return movie;
     },
+    findMovieId: (parent, args) => {
+      const id = args.id;
+      const movie = _.find(MovieList, { id: Number(id) });
+      return movie;
+    },
   },
   User: {
     favoriteMovies: () => {

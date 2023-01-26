@@ -25,6 +25,7 @@ const typeDefs = gql`
     findUserId(id: ID!): User!
     movies: [Movie!]!
     findMovieName(name: String!): Movie!
+    findMovieId(id: ID!): Movie!
   }
 
   input CreateUserInput {

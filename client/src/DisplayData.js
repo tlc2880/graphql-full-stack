@@ -22,17 +22,6 @@ const QUERY_ALL_MOVIES = gql`
   }
 `;
 
-const GET_MOVIE_BY_NAME = gql`
-  query Movie($name: String!) {
-    movie(name: $name) {
-      name
-      yearOfPublication
-      rating
-      isInTheaters
-    }
-  }
-`;
-
 const GET_USER_BY_NAME = gql`
   query User($name: String!) {
     findUserName(name: $name) {
@@ -46,7 +35,7 @@ const GET_USER_BY_NAME = gql`
 
 const GET_USER_BY_ID = gql`
   query User($id: ID!) {
-    user(id: $id) {
+    findUserId(id: $id) {
       name
       username
       age
@@ -55,6 +44,27 @@ const GET_USER_BY_ID = gql`
   }
 `;
 
+const GET_MOVIE_BY_NAME = gql`
+  query Movie($name: String!) {
+    findMovieName(name: $name) {
+      name
+      yearOfPublication
+      rating
+      isInTheaters
+    }
+  }
+`;
+
+const GET_MOVIE_BY_ID = gql`
+  query Movie($id: ID!) {
+    findMovieId(id: $id) {
+      name
+      yearOfPublication
+      rating
+      isInTheaters
+    }
+  }
+`;
 const CREATE_USER_MUTATION = gql`
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -66,8 +76,9 @@ const CREATE_USER_MUTATION = gql`
 
 function DisplayData() {
   const [userSearchedName, setUserSearchedName] = useState("James");
-  const [movieSearched, setMovieSearched] = useState("Interstellar");
-  const [userSearched, setUserSearched] = useState("2");
+  const [userSearchedId, setUserSearchedId] = useState("2");
+  const [movieSearchedName, setMovieSearchedName] = useState("Interstellar");
+  const [movieSearchedId, setMovieSearchedId] = useState("1");
 
   // Create User States
   const [name, setName] = useState("");
@@ -80,16 +91,20 @@ function DisplayData() {
 
   const [
     fetchUserName,
-    { data: userSearchedNameData, error: userError },
+    { data: userSearchedNameData, error: userErrorName },
   ] = useLazyQuery(GET_USER_BY_NAME);
   const [
-    fetchMovie,
-    { data: movieSearchedData, error: movieError },
+    fetchUserId,
+    { data: userSearchedIdData, error: userErrorId },
+  ] = useLazyQuery(GET_USER_BY_ID);
+  const [
+    fetchMovieName,
+    { data: movieSearchedNameData, error: movieErrorName },
   ] = useLazyQuery(GET_MOVIE_BY_NAME);
   const [
-    fetchUser,
-    { data: userSearchedData, error: userError2 },
-  ] = useLazyQuery(GET_USER_BY_ID);
+    fetchMovieId,
+    { data: movieSearchedIdData, error: movieErrorId },
+  ] = useLazyQuery(GET_MOVIE_BY_ID);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION);
 
@@ -189,7 +204,7 @@ function DisplayData() {
               </h3>{" "}
             </div>
           )}
-          {userError && <h3> There was an error fetching the data</h3>}
+          {userErrorName && <h3> There was an error fetching the data</h3>}
         </div>
       </div>
 
@@ -198,14 +213,14 @@ function DisplayData() {
           type="text"
           placeholder="2..."
           onChange={(event) => {
-            setUserSearched(event.target.value);
+            setUserSearchedId(event.target.value);
           }}
         />
          <button
           onClick={() => {
-            fetchUser({
+            fetchUserId({
               variables: {
-                id: userSearched,
+                id: userSearchedId,
               },
             });
           }}
@@ -213,21 +228,21 @@ function DisplayData() {
           Fetch User Id
         </button>
         <div>
-          {userSearchedData && (
+          {userSearchedIdData && (
             <div>
-              <h3>Name: {userSearchedData.user.name}</h3>
+              <h3>Name: {userSearchedIdData.findUserId.name}</h3>
               <h3>
-                username: {userSearchedData.user.username}
+                username: {userSearchedIdData.findUserId.username}
               </h3>
               <h3>
-                Age: {userSearchedData.user.age}
+                Age: {userSearchedIdData.findUserId.age}
               </h3>
               <h3>
-                Nationality: {userSearchedData.user.nationality}
+                Nationality: {userSearchedIdData.findUserId.nationality}
               </h3>{" "}
             </div>
           )}
-          {userError2 && <h3> There was an error fetching the data</h3>}
+          {userErrorId && <h3> There was an error fetching the data</h3>}
         </div>
       </div>
 
@@ -242,14 +257,14 @@ function DisplayData() {
           type="text"
           placeholder="Interstellar..."
           onChange={(event) => {
-            setMovieSearched(event.target.value);
+            setMovieSearchedName(event.target.value);
           }}
         />
          <button
           onClick={() => {
-            fetchMovie({
+            fetchMovieName({
               variables: {
-                name: movieSearched,
+                name: movieSearchedName,
               },
             });
           }}
@@ -257,21 +272,60 @@ function DisplayData() {
           Fetch Movie Name
         </button>
         <div>
-          {movieSearchedData && (
+          {movieSearchedNameData && (
             <div>
-              <h3>MovieName: {movieSearchedData.movie.name}</h3>
+              <h3>MovieName: {movieSearchedNameData.findMovieName.name}</h3>
               <h3>
-                Year Of Publication: {movieSearchedData.movie.yearOfPublication}
+                Year Of Publication: {movieSearchedNameData.findMovieName.yearOfPublication}
               </h3>
               <h3>
-                Rating: {movieSearchedData.movie.rating}
+                Rating: {movieSearchedNameData.findMovieName.rating}
               </h3>
               <h3>
-                Is in Theaters: {JSON.stringify(movieSearchedData.movie.isInTheaters)}
+                Is in Theaters: {JSON.stringify(movieSearchedNameData.findMovieName.isInTheaters)}
               </h3>{" "}
             </div>
           )}
-          {movieError && <h3> There was an error fetching the data</h3>}
+          {movieErrorName && <h3> There was an error fetching the data</h3>}
+        </div>
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="1..."
+          onChange={(event) => {
+            setMovieSearchedId(event.target.value);
+          }}
+        />
+         <button
+          onClick={() => {
+            fetchMovieId({
+              variables: {
+                id: movieSearchedId,
+              },
+            });
+          }}
+        > 
+          Fetch Movie Id
+        </button>
+        <div>
+        {console.log(movieSearchedIdData)}
+          {movieSearchedIdData && (
+            <div>
+              <h3>MovieName: {movieSearchedIdData.findMovieId.name}</h3>
+              <h3>
+                Year Of Publication: {movieSearchedIdData.findMovieId.yearOfPublication}
+              </h3>
+              <h3>
+                Rating: {movieSearchedIdData.findMovieId.rating}
+              </h3>
+              <h3>
+                Is in Theaters: {JSON.stringify(movieSearchedIdData.findMovieId.isInTheaters)}
+              </h3>{" "}
+            </div>
+          )}
+          {movieErrorId && <h1> There was an error fetching the data</h1>}
         </div>
       </div>
     </div>
