@@ -22,17 +22,6 @@ const QUERY_ALL_MOVIES = gql`
   }
 `;
 
-const GET_MOVIE_BY_NAME = gql`
-  query Movie($name: String!) {
-    findMovieName(name: $name) {
-      name
-      yearOfPublication
-      rating
-      isInTheaters
-    }
-  }
-`;
-
 const GET_USER_BY_NAME = gql`
   query User($name: String!) {
     findUserName(name: $name) {
@@ -55,6 +44,27 @@ const GET_USER_BY_ID = gql`
   }
 `;
 
+const GET_MOVIE_BY_NAME = gql`
+  query Movie($name: String!) {
+    findMovieName(name: $name) {
+      name
+      yearOfPublication
+      rating
+      isInTheaters
+    }
+  }
+`;
+
+const GET_MOVIE_BY_ID = gql`
+  query Movie($id: ID!) {
+    findMovieId(id: $id) {
+      name
+      yearOfPublication
+      rating
+      isInTheaters
+    }
+  }
+`;
 const CREATE_USER_MUTATION = gql`
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -68,7 +78,8 @@ function DisplayData() {
   const [userSearchedName, setUserSearchedName] = useState("James");
   const [userSearchedId, setUserSearchedId] = useState("2");
   const [movieSearchedName, setMovieSearchedName] = useState("Interstellar");
-  
+  const [movieSearchedId, setMovieSearchedId] = useState("1");
+
   // Create User States
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -83,6 +94,17 @@ function DisplayData() {
     { data: userSearchedNameData, error: userErrorName },
   ] = useLazyQuery(GET_USER_BY_NAME);
   const [
+    fetchUserId,
+    { data: userSearchedIdData, error: userErrorId },
+  ] = useLazyQuery(GET_USER_BY_ID);
+  const [
+    fetchMovieName,
+    { data: movieSearchedNameData, error: movieErrorName },
+  ] = useLazyQuery(GET_MOVIE_BY_NAME);
+  const [
+    fetchMovieId,
+    { data: movieSearchedIdData, error: movieErrorId },
+  ] = useLazyQuery(GET_MOVIE_BY_ID);
     fetchMovie,
     { data: movieSearchedNameData, error: movieErrorName },
   ] = useLazyQuery(GET_MOVIE_BY_NAME);
@@ -247,7 +269,7 @@ function DisplayData() {
         />
          <button
           onClick={() => {
-            fetchMovie({
+            fetchMovieName({
               variables: {
                 name: movieSearchedName,
               },
@@ -258,6 +280,59 @@ function DisplayData() {
         </button>
         <div>
           {movieSearchedNameData && (
+            <div>
+              <h3>MovieName: {movieSearchedNameData.findMovieName.name}</h3>
+              <h3>
+                Year Of Publication: {movieSearchedNameData.findMovieName.yearOfPublication}
+              </h3>
+              <h3>
+                Rating: {movieSearchedNameData.findMovieName.rating}
+              </h3>
+              <h3>
+                Is in Theaters: {JSON.stringify(movieSearchedNameData.findMovieName.isInTheaters)}
+              </h3>{" "}
+            </div>
+          )}
+          {movieErrorName && <h3> There was an error fetching the data</h3>}
+        </div>
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="1..."
+          onChange={(event) => {
+            setMovieSearchedId(event.target.value);
+          }}
+        />
+         <button
+          onClick={() => {
+            fetchMovieId({
+              variables: {
+                id: movieSearchedId,
+              },
+            });
+          }}
+        > 
+          Fetch Movie Id
+        </button>
+        <div>
+        {console.log(movieSearchedIdData)}
+          {movieSearchedIdData && (
+            <div>
+              <h3>MovieName: {movieSearchedIdData.findMovieId.name}</h3>
+              <h3>
+                Year Of Publication: {movieSearchedIdData.findMovieId.yearOfPublication}
+              </h3>
+              <h3>
+                Rating: {movieSearchedIdData.findMovieId.rating}
+              </h3>
+              <h3>
+                Is in Theaters: {JSON.stringify(movieSearchedIdData.findMovieId.isInTheaters)}
+              </h3>{" "}
+            </div>
+          )}
+          {movieErrorId && <h1> There was an error fetching the data</h1>}
             <div>
               <h3>MovieName: {movieSearchedNameData.findMovieName.name}</h3>
               <h3>
