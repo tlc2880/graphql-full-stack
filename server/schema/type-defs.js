@@ -21,10 +21,10 @@ const typeDefs = gql`
 
   type Query {
     users: [User!]!
-    user(id: ID!): User!
     findUserName(name: String!): User!
+    findUserId(id: ID!): User!
     movies: [Movie!]!
-    movie(name: String!): Movie!
+    findMovieName(name: String!): Movie!
   }
 
   input CreateUserInput {
