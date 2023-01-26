@@ -105,6 +105,13 @@ function DisplayData() {
     fetchMovieId,
     { data: movieSearchedIdData, error: movieErrorId },
   ] = useLazyQuery(GET_MOVIE_BY_ID);
+    fetchMovie,
+    { data: movieSearchedNameData, error: movieErrorName },
+  ] = useLazyQuery(GET_MOVIE_BY_NAME);
+  const [
+    fetchUserId,
+    { data: userSearchedIdData, error: userErrorId },
+  ] = useLazyQuery(GET_USER_BY_ID);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION);
 
@@ -326,6 +333,20 @@ function DisplayData() {
             </div>
           )}
           {movieErrorId && <h1> There was an error fetching the data</h1>}
+            <div>
+              <h3>MovieName: {movieSearchedNameData.findMovieName.name}</h3>
+              <h3>
+                Year Of Publication: {movieSearchedNameData.findMovieName.yearOfPublication}
+              </h3>
+              <h3>
+                Rating: {movieSearchedNameData.findMovieName.rating}
+              </h3>
+              <h3>
+                Is in Theaters: {JSON.stringify(movieSearchedNameData.findMovieName.isInTheaters)}
+              </h3>{" "}
+            </div>
+          )}
+          {movieErrorName && <h3> There was an error fetching the data</h3>}
         </div>
       </div>
     </div>
