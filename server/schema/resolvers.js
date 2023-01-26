@@ -14,9 +14,16 @@ const resolvers = {
     },
     findUserId: (parent, args) => {
       const id = args.id;
-      const user = _.find(UserList, { id: Number(id) });
-      return user;
+      console.log('id: ', id);
+      const user2 = _.find(UserList, { id: Number(id) });
+      console.log('user2; ', user2);
+      return user2;
     },
+    // findUser: (parent, args) => {
+    //   const name = args.name;
+    //   const user = _.find(UserList, { name });
+    //   return user;
+    // },
 
     // MOVIE RESOLVERS
     movies: () => {
