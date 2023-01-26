@@ -12,7 +12,7 @@ const resolvers = {
       const user = _.find(UserList, { name });
       return user;
     },
-    user: (parent, args) => {
+    findUserId: (parent, args) => {
       const id = args.id;
       const user = _.find(UserList, { id: Number(id) });
       return user;
@@ -22,7 +22,7 @@ const resolvers = {
     movies: () => {
       return MovieList;
     },
-    movie: (parent, args) => {
+    findMovieName: (parent, args) => {
       const name = args.name;
       const movie = _.find(MovieList, { name });
       return movie;
