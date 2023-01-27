@@ -17,6 +17,8 @@ const QUERY_ALL_MOVIES = gql`
   query GetAllMovies {
     movies {
       name
+      yearOfPublication
+      id
     }
   }
 `;
@@ -64,6 +66,17 @@ const GET_MOVIE_BY_ID = gql`
   }
 `;
 
+const GET_MOVIE_BY_RATING = gql`
+  query Movie($rating: String!) {
+    findMovieRating(rating: $rating) {
+      name
+      yearOfPublication
+      rating
+      isInTheaters
+    }
+  }
+`;
+
 const CREATE_USER_MUTATION = gql`
   mutation CreateUser($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -78,6 +91,7 @@ function DisplayData() {
   const [userSearchedId, setUserSearchedId] = useState("2");
   const [movieSearchedName, setMovieSearchedName] = useState("Interstellar");
   const [movieSearchedId, setMovieSearchedId] = useState("1");
+  const [movieSearchedRating, setMovieSearchedRating] = useState("PG");
 
   // Create User States
   const [name, setName] = useState("");
@@ -104,6 +118,10 @@ function DisplayData() {
     fetchMovieId,
     { data: movieSearchedIdData, error: movieErrorId },
   ] = useLazyQuery(GET_MOVIE_BY_ID);
+  const [
+    fetchMovieRating,
+    { data: movieSearchedRatingData, error: movieErrorRating },
+  ] = useLazyQuery(GET_MOVIE_BY_RATING);
 
   const [createUser] = useMutation(CREATE_USER_MUTATION);
 
@@ -159,7 +177,7 @@ function DisplayData() {
       {data &&
         data.users.map((user) => {
           return (
-            <div>
+            <div key={user.id}>
               <h3>Name: {user.name}</h3>
               <h3>Username: {user.username}</h3>
               <h3>Age: {user.age}</h3>
@@ -188,7 +206,6 @@ function DisplayData() {
           Fetch User Name
         </button>
         <div>
-          {console.log(userSearchedNameData)}
           {userSearchedNameData && (
             <div>
               <h3>Name: {userSearchedNameData.findUserName.name}</h3>
@@ -227,7 +244,6 @@ function DisplayData() {
           Fetch User Id
         </button>
         <div>
-          {console.log(userSearchedIdData)}
           {userSearchedIdData && (
             <div>
               <h3>Name: {userSearchedIdData.findUserId.name}</h3>
@@ -248,7 +264,12 @@ function DisplayData() {
 
       {movieData &&
         movieData.movies.map((movie) => {
-          return <h3>Movie Name: {movie.name}</h3>;
+          return (
+            <div key={movie.id}>
+              <h3>Movie Name: {movie.name}</h3>
+              <h3>Movie year: {movie.yearOfPublication}</h3>
+          </div>
+          )
       })}
 
       <div>
@@ -271,7 +292,6 @@ function DisplayData() {
           Fetch Movie Name
         </button>
         <div>
-        {console.log(movieSearchedNameData)}
           {movieSearchedNameData && (
             <div>
               <h3>Movie Name: {movieSearchedNameData.findMovieName.name}</h3>
@@ -310,7 +330,6 @@ function DisplayData() {
           Fetch Movie Id
         </button>
         <div>
-        {console.log(movieSearchedIdData)}
           {movieSearchedIdData && (
             <div>
               <h3>MovieName: {movieSearchedIdData.findMovieId.name}</h3>
@@ -326,6 +345,44 @@ function DisplayData() {
             </div>
           )}
           {movieErrorId && <h3> There was an error fetching the data</h3>}
+        </div>
+      </div>
+
+      <div>
+        <input
+          type="text"
+          placeholder="PG..."
+          onChange={(event) => {
+            setMovieSearchedRating(event.target.value);
+          }}
+        />
+         <button
+          onClick={() => {
+            fetchMovieRating({
+              variables: {
+                rating: movieSearchedRating,
+              },
+            });
+          }}
+        > 
+          Fetch Movie Rating
+        </button>
+        <div>
+          {movieSearchedRatingData && (
+            <div>
+              <h3>MovieName: {movieSearchedRatingData.findMovieRating.name}</h3>
+              <h3>
+                Year Of Publication: {movieSearchedRatingData.findMovieRating.yearOfPublication}
+              </h3>
+              <h3>
+                Rating: {movieSearchedRatingData.findMovieRating.rating}
+              </h3>
+              <h3>
+                Is in Theaters: {JSON.stringify(movieSearchedRatingData.findMovieRating.isInTheaters)}
+              </h3>{" "}
+            </div>
+          )}
+          {movieErrorRating && <h3> There was an error fetching the data</h3>}
         </div>
       </div>
     </div>
