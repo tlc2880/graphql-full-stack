@@ -15,7 +15,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     rating: String!
-    yearOfPublication: Int!
+    yearOfPublication: String!
     isInTheaters: Boolean!
   }
 
@@ -26,6 +26,7 @@ const typeDefs = gql`
     movies: [Movie!]!
     findMovieName(name: String!): Movie!
     findMovieId(id: ID!): Movie!
+    findMovieRating(rating: String!): Movie!
   }
 
   input CreateUserInput {
